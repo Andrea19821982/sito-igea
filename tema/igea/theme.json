@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+	"version": 3,
+	"settings": {
+		"color": {
+			"custom": false,
+			"customGradient": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"palette": [
+				{ "slug": "blu", "name": "Blu IGEA", "color": "#284566" },
+				{ "slug": "inchiostro", "name": "Inchiostro", "color": "#1b2b40" },
+				{ "slug": "verde", "name": "Verde (testo)", "color": "#2f7a4b" },
+				{ "slug": "grigio", "name": "Grigio", "color": "#56657a" },
+				{ "slug": "carta", "name": "Carta", "color": "#f6f8fa" },
+				{ "slug": "bianco", "name": "Bianco", "color": "#ffffff" }
+			]
+		},
+		"typography": {
+			"customFontSize": false,
+			"dropCap": false
+		},
+		"layout": {
+			"contentSize": "760px",
+			"wideSize": "1240px"
+		}
+	}
+}

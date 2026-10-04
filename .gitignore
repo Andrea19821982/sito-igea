@@ -1,0 +1,36 @@
+# Mai nel repository: configurazione con credenziali, database, backup
+wp-config.php
+wp-config-*.php
+.env
+.env.*
+*.sql
+*.sql.gz
+*.sqlite
+*.bak
+backup/
+backups/
+*.zip
+*.tar
+*.tar.gz
+*.wpress
+
+# Documenti Office in radice e file con nomi che richiamano password.
+# Non è una protezione sufficiente: documenti con password non vanno in questa cartella.
+/*.doc
+/*.docx
+/*.xls
+/*.xlsx
+/*.ppt
+/*.pptx
+*password*
+*Password*
+*PASSWORD*
+*credenzial*
+*Credenzial*
+
+# Log e file di sistema
+debug.log
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

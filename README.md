@@ -16,7 +16,15 @@ PHP 8.2 o successivo (consigliato 8.3), WordPress 6.6 o successivo. Provato su W
 ## Controlli
 
 ```bash
-bash strumenti/verifica.sh
+composer install -d strumenti                               # una volta: regole di sicurezza di WordPress (WPCS)
+bash strumenti/verifica.sh                                  # controlli statici, da far passare prima di consegnare
+bash strumenti/sito-locale.sh crea ../wp-locale             # WordPress locale con SQLite e pagine di prova
+bash strumenti/sito-locale.sh avvia ../wp-locale            # http://127.0.0.1:8080/
+node strumenti/prova-sito.js http://127.0.0.1:8080/ --invia # prova nel browser, desktop e telefono
 ```
+
+`prova-sito.js` usa Playwright; con `npm install --prefix strumenti axe-core` controlla anche l'accessibilità (WCAG 2.2 AA). Le modifiche alla grafica vanno provate comunque su un telefono vero.
+
+Le novità di ogni versione sono in [CHANGELOG.md](CHANGELOG.md).
 
 Le regole di progetto sono in [CLAUDE.md](CLAUDE.md).

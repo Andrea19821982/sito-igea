@@ -164,7 +164,7 @@ add_action( 'init', static function (): void {
 
 	// HTML grezzo: WPBakery lo salva in base64. Passa dal filtro di WordPress per i contenuti.
 	add_shortcode( 'vc_raw_html', static function ( $a, $contenuto = '' ): string {
-		$html = base64_decode( trim( wp_strip_all_tags( (string) $contenuto ) ), true );
+		$html = base64_decode( trim( wp_strip_all_tags( (string) $contenuto ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- formato di WPBakery; il risultato passa da wp_kses_post().
 		return false === $html ? '' : wp_kses_post( rawurldecode( $html ) );
 	} );
 	// JavaScript grezzo: mai stampato (e la Content Security Policy lo bloccherebbe comunque).

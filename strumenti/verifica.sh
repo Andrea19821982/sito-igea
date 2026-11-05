@@ -57,10 +57,19 @@ grep -nE "\.(inner|outer)HTML\s*=|insertAdjacentHTML|document\.write" tema/igea/
 mancano=0
 for f in assets/css/igea.css assets/css/editor.css assets/js/igea.js assets/img/dea.svg assets/img/logo-igea-340.png assets/img/logo-igea-340.webp \
 	assets/fonts/inter-latin-wght-normal.woff2 assets/fonts/inter-latin-ext-wght-normal.woff2 assets/fonts/inter-tight-latin-wght-normal.woff2 assets/fonts/inter-tight-latin-ext-wght-normal.woff2 \
-	assets/img/dpi.jpg assets/img/dpi.webp assets/img/ambiente.jpg assets/img/ambiente.webp assets/img/alimenti.jpg assets/img/alimenti.webp assets/img/medicina.jpg assets/img/medicina.webp; do
+	assets/img/dpi.jpg assets/img/dpi.webp assets/img/ambiente.jpg assets/img/ambiente.webp assets/img/alimenti.jpg assets/img/alimenti.webp assets/img/medicina.jpg assets/img/medicina.webp assets/img/condivisione.jpg; do
 	[ -f "tema/igea/$f" ] || { ko "manca tema/igea/$f"; mancano=1; }
 done
 [ $mancano -eq 0 ] && ok "file del tema presenti"
+
+# 9. Controlli di sicurezza di WordPress (WPCS) con phpcs.xml.dist. Installazione: composer install -d strumenti
+if [ -x strumenti/vendor/bin/phpcs ]; then
+	v="$PWD/strumenti/vendor"
+	strumenti/vendor/bin/phpcs -q --standard=phpcs.xml.dist --runtime-set installed_paths "$v/wp-coding-standards/wpcs,$v/phpcsstandards/phpcsutils,$v/phpcsstandards/phpcsextra" \
+		&& ok "controlli di sicurezza WordPress (phpcs)" || ko "controlli di sicurezza WordPress (phpcs): vedi sopra"
+else
+	echo "SALTATO controlli di sicurezza WordPress (composer install -d strumenti per attivarli)"
+fi
 
 # Promemoria: segnaposto ancora nel tema (non è un errore)
 n=$(grep -rhoE "DA (CONFERMARE|VALIDARE)" tema | wc -l)

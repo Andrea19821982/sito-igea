@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const IGEA_VERSIONE = '0.4.1';
+const IGEA_VERSIONE = '0.4.2';
 
 require_once __DIR__ . '/inc/setup.php';
 require_once __DIR__ . '/inc/dati.php';

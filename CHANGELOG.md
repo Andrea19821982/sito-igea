@@ -1,5 +1,14 @@
 # Novità del tema IGEA
 
+## 0.4.2, 5 novembre 2026
+
+- **Anteprima dei link condivisi.** Su LinkedIn, WhatsApp e nelle email un link del sito mostra titolo, riassunto e immagine: l'immagine in evidenza, la foto del servizio o il logo su fondo bianco (`assets/img/condivisione.jpg`, 1200×630). Se è attivo un plugin SEO, il tema non aggiunge nulla.
+- **Percorso per Google.** Le pagine interne e le news hanno i dati strutturati del percorso (Home > Servizi > Pagina), senza cambiare la grafica.
+- **Stampa.** Le pagine si stampano pulite: solo il contenuto, senza menu, moduli, animazioni e decorazioni. Le tabelle non si spezzano a metà riga.
+- **Controlli di sicurezza ufficiali di WordPress.** `phpcs.xml.dist` applica le regole di sicurezza di WPCS a tema e mu-plugin; `verifica.sh` le esegue dopo `composer install -d strumenti`. Nessun problema reale trovato: le poche segnalazioni (confronti con valori fissi, nonce già verificato più avanti) sono annotate con il motivo.
+- `prova-sito.js` controlla anche che i dati strutturati siano validi e che l'immagine dell'anteprima esista.
+- Guida di installazione: icona del sito, lingua italiana, anteprima dei link.
+
 ## 0.4.1, 5 novembre 2026
 
 - **Accessibilità.** Controllo automatico WCAG 2.2 AA (axe-core) di tutte le pagine, su desktop e telefono, più contrasto misurato sui pixel, titoli, navigazione da tastiera e riflusso a 320 px. Corretto l'unico difetto trovato: il riquadro "Dalle fonti ufficiali" era un `aside` dentro la sezione News, ora è una `section`.

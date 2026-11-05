@@ -8,6 +8,7 @@
  *  - ogni pagina collegata da menu e piè di pagina, più una ricerca e un indirizzo inesistente (404);
  *  - nessun errore JavaScript e nessuna violazione della Content Security Policy;
  *  - nessuno scorrimento orizzontale, un solo titolo h1, nessuna immagine senza testo alternativo;
+ *  - dati strutturati validi e immagine dell'anteprima social raggiungibile;
  *  - accessibilità con axe-core, se installato (npm install --prefix strumenti axe-core);
  *  - home: menu del telefono, test "Quali adempimenti ti riguardano?", controlli del modulo contatti.
  * Con --invia spedisce anche una richiesta vera dal modulo: usarlo solo su staging, dove le email
@@ -82,6 +83,18 @@ async function provaPagina(ctx, voce, schermo) {
 		senzaAlt: [...document.images].filter(i => !i.hasAttribute('alt')).map(i => i.currentSrc || i.src).slice(0, 3),
 		lingua: document.documentElement.lang,
 	}));
+	if (schermo === 'desktop' && voce.stato === 200) {
+		// Dati strutturati leggibili e immagine dell'anteprima social raggiungibile.
+		const meta = await page.evaluate(() => ({
+			ld: [...document.querySelectorAll('script[type="application/ld+json"]')].map(x => { try { JSON.parse(x.textContent); return ''; } catch (e) { return x.textContent.slice(0, 60); } }).filter(Boolean),
+			img: (document.querySelector('meta[property="og:image"]') || {}).content || '',
+		}));
+		meta.ld.forEach(x => problemi.push('dati strutturati non validi: ' + x));
+		if (meta.img) {
+			const r = await page.request.get(meta.img).catch(() => null);
+			if (!r || r.status() !== 200 || !/^image\//.test(r.headers()['content-type'] || '')) problemi.push('immagine di anteprima non raggiungibile: ' + meta.img);
+		}
+	}
 	if (dati.largo > 1) problemi.push(`scorrimento orizzontale di ${dati.largo} px`);
 	if (dati.h1 !== 1) problemi.push(`titoli h1: ${dati.h1} (deve essercene uno)`);
 	if (dati.senzaAlt.length) problemi.push('immagini senza alt: ' + dati.senzaAlt.join(', '));

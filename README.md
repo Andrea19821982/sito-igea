@@ -16,6 +16,7 @@ PHP 8.2 o successivo (consigliato 8.3), WordPress 6.6 o successivo. Provato su W
 ## Controlli
 
 ```bash
+composer install -d strumenti                               # una volta: regole di sicurezza di WordPress (WPCS)
 bash strumenti/verifica.sh                                  # controlli statici, da far passare prima di consegnare
 bash strumenti/sito-locale.sh crea ../wp-locale             # WordPress locale con SQLite e pagine di prova
 bash strumenti/sito-locale.sh avvia ../wp-locale            # http://127.0.0.1:8080/

@@ -53,11 +53,13 @@ function igea_cf_campi_nascosti(): void {
 
 add_action( 'template_redirect', 'igea_cf_gestisci' );
 function igea_cf_gestisci(): void {
+	// Solo confronti con valori fissi. Il nonce lo verifica igea_cf_elabora() prima di ogni effetto.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 	if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || IGEA_CF_AZIONE !== ( $_POST['igea_azione'] ?? '' ) ) {
 		return;
 	}
 	nocache_headers();
-	$esito = igea_cf_elabora( wp_unslash( $_POST ) );
+	$esito = igea_cf_elabora( wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verificato dentro igea_cf_elabora(), campo per campo sanificato lì.
 	if ( true === $esito ) {
 		// Post/Redirect/Get: nessun dato personale nell'URL, il ricaricamento non reinvia.
 		// La pagina che ha ricevuto il modulo (Contatti, o la home se la pagina non esiste).
@@ -129,7 +131,7 @@ function igea_cf_elabora( array $in ): true|array {
 	}
 
 	// 5. Limite di invii. Solo REMOTE_ADDR (X-Forwarded-For solo dietro un proxy noto), salvato come hash.
-	$chiave = 'igea_cf_' . substr( hash_hmac( 'sha256', (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ), wp_salt() ), 0, 32 );
+	$chiave = 'igea_cf_' . substr( hash_hmac( 'sha256', (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ), wp_salt() ), 0, 32 ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- usato solo dentro un hash, mai salvato né stampato.
 	$n      = (int) get_transient( $chiave );
 	if ( $n >= IGEA_CF_LIMITE ) {
 		return [ 'errori' => [ '_modulo' => 'Troppi invii ravvicinati. Riprova fra un’ora.' ], 'valori' => $v ];

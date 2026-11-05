@@ -67,6 +67,9 @@ add_filter( 'pre_wp_mail', static function ( \$nullo, array \$a ) {
 	file_put_contents( '$dir/posta/' . microtime( true ) . '.json', wp_json_encode( \$a, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 	return true;
 }, 99, 2 );
+// Nessun controllo degli aggiornamenti: wordpress.org può essere irraggiungibile e riempirebbe debug.log.
+foreach ( [ 'wp_version_check', 'wp_update_plugins', 'wp_update_themes' ] as \$controllo ) { remove_action( \$controllo, \$controllo ); }
+foreach ( [ '_maybe_update_core', '_maybe_update_plugins', '_maybe_update_themes' ] as \$controllo ) { remove_action( 'admin_init', \$controllo ); }
 PHP
 
 	# Installazione e pagine di prova.

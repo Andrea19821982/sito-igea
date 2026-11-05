@@ -12,8 +12,8 @@ function igea_foto( string $nome, string $alt, int $larghezza, int $altezza, boo
 		esc_url( get_theme_file_uri( "assets/img/{$nome}.webp" ) ),
 		esc_url( get_theme_file_uri( "assets/img/{$nome}.jpg" ) ),
 		esc_attr( $alt ),
-		$larghezza,
-		$altezza,
+		absint( $larghezza ),
+		absint( $altezza ),
 		$differita ? ' loading="lazy" decoding="async"' : ''
 	);
 }
@@ -39,7 +39,7 @@ function igea_svg( string $nome ): void {
 	}
 	$file = get_theme_file_path( "assets/img/{$nome}.svg" );
 	if ( is_readable( $file ) ) {
-		echo file_get_contents( $file ); // phpcs:ignore WordPress.Security.EscapeOutput -- file statico del tema.
+		echo file_get_contents( $file ); // phpcs:ignore WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions -- file statico del tema, da un elenco chiuso.
 	}
 }
 
@@ -97,7 +97,7 @@ function igea_voci_piede(): array {
 
 function igea_stampa_voci( array $voci ): void {
 	// Solo il percorso, per confronto: non viene mai stampato.
-	$attuale = untrailingslashit( (string) strtok( (string) ( $_SERVER['REQUEST_URI'] ?? '/' ), '?' ) );
+	$attuale = untrailingslashit( (string) strtok( (string) ( $_SERVER['REQUEST_URI'] ?? '/' ), '?' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- solo confronto.
 	echo '<ul>';
 	foreach ( $voci as [ $etichetta, $url ] ) {
 		$corrente = ! str_contains( $url, '#' ) && untrailingslashit( (string) wp_parse_url( $url, PHP_URL_PATH ) ) === $attuale;

@@ -218,7 +218,7 @@ add_action( 'init', static function (): void {
 		],
 		'supports'     => [ 'title', 'custom-fields' ],
 	] );
-	if ( ! wp_next_scheduled( 'igea_cf_pulizia' ) ) {
+	if ( ! wp_installing() && ! wp_next_scheduled( 'igea_cf_pulizia' ) ) {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'igea_cf_pulizia' );
 	}
 } );

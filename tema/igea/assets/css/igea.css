@@ -488,3 +488,8 @@ a.page-numbers:hover{border-color:var(--blu)}
 #nota-sanitari{font-size:.85rem}
 /* Negli archivi i titoli dell'elenco sono h2 (sotto l'h1 della pagina): stesso aspetto degli h3 della home */
 .news-lista h2{font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700;letter-spacing:-.02em;margin-top:6px}
+/* Pagine WPBakery quando il plugin è spento (inc/wpbakery.php): testo semplice e leggibile */
+.prosa .vc-messaggio{border-left:3px solid var(--verde-medio);background:var(--carta);padding:14px 18px;border-radius:0 8px 8px 0;margin:1.2em 0}
+.prosa .vc-galleria{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:1.2em 0}
+.prosa .vc-galleria img,.prosa figure img{width:100%;height:auto;border-radius:8px}
+.prosa figure{margin:1.2em 0}

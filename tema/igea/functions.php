@@ -8,10 +8,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const IGEA_VERSIONE = '0.4.0';
+const IGEA_VERSIONE = '0.4.1';
 
 require_once __DIR__ . '/inc/setup.php';
 require_once __DIR__ . '/inc/dati.php';
 require_once __DIR__ . '/inc/servizi.php';
 require_once __DIR__ . '/inc/modelli.php';
 require_once __DIR__ . '/inc/seo.php';
+require_once __DIR__ . '/inc/wpbakery.php';

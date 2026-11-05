@@ -16,16 +16,19 @@ done < <(find tema mu-plugins -name '*.php' -print0)
 
 # 2. Sintassi JavaScript
 if command -v node >/dev/null; then
-	node --check tema/igea/assets/js/igea.js && ok "sintassi JavaScript" || ko "sintassi JavaScript"
+	node --check tema/igea/assets/js/igea.js && node --check strumenti/prova-sito.js && ok "sintassi JavaScript" || ko "sintassi JavaScript"
 else
 	echo "SALTATO sintassi JavaScript (node non installato)"
 fi
+
+# 2b. Sintassi degli script di shell
+bash -n strumenti/verifica.sh && bash -n strumenti/sito-locale.sh && ok "sintassi degli script" || ko "sintassi degli script"
 
 # 3. theme.json valido
 python3 -m json.tool tema/igea/theme.json >/dev/null 2>&1 && ok "theme.json" || ko "theme.json non valido"
 
 # 4. Nessuna credenziale: costanti sensibili con un valore, chiavi private, wp-config
-if grep -rnE "define\(\s*'(IGEA_SMTP_PASS|IGEA_SMTP_USER|DB_PASSWORD|AUTH_KEY)'\s*," tema mu-plugins docs strumenti >/dev/null 2>&1 \
+if grep -rnE "define\(\s*'(IGEA_SMTP_PASS|IGEA_SMTP_USER|DB_PASSWORD|AUTH_KEY)'\s*,\s*['\"][^'\"]+" tema mu-plugins docs strumenti >/dev/null 2>&1 \
 	|| grep -rnE -- "-----BEGIN [A-Z ]*PRIVATE KEY" . --exclude-dir=.git >/dev/null 2>&1 \
 	|| [ -n "$(git ls-files 2>/dev/null | grep -E '(^|/)wp-config\.php$')" ]; then
 	ko "possibile credenziale nel repository"
@@ -62,6 +65,8 @@ done
 # Promemoria: segnaposto ancora nel tema (non è un errore)
 n=$(grep -rhoE "DA (CONFERMARE|VALIDARE)" tema | wc -l)
 echo "INFO    segnaposto DA CONFERMARE/DA VALIDARE nel tema: $n (elenco in docs/da-confermare.md)"
+
+echo "INFO    prova nel browser (staging o locale): node strumenti/prova-sito.js https://indirizzo-del-sito/"
 
 [ $errori -eq 0 ] && echo "Tutti i controlli superati." || echo "Controlli falliti: $errori"
 exit $errori

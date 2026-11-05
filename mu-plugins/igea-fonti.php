@@ -20,7 +20,7 @@ const IGEA_FONTI = [
 ];
 
 add_action( 'init', static function (): void {
-	if ( ! wp_next_scheduled( 'igea_aggiorna_fonti' ) ) {
+	if ( ! wp_installing() && ! wp_next_scheduled( 'igea_aggiorna_fonti' ) ) {
 		wp_schedule_event( time() + 300, 'twicedaily', 'igea_aggiorna_fonti' );
 	}
 } );

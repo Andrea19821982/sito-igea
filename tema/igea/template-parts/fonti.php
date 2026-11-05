@@ -11,7 +11,7 @@ if ( ! $igea_voci && ! igea_mostra_segnaposto() ) {
 	return;
 }
 ?>
-<aside class="fonti rivela" aria-labelledby="t-fonti">
+<section class="fonti rivela" aria-labelledby="t-fonti">
 	<div class="fonti-intesta"><h3 id="t-fonti">Dalle fonti ufficiali</h3><span class="aggiornato"><i aria-hidden="true"></i>Si aggiorna da solo due volte al giorno</span></div>
 	<?php if ( $igea_voci ) : ?>
 		<ul class="fonti-lista">
@@ -23,4 +23,4 @@ if ( ! $igea_voci && ! igea_mostra_segnaposto() ) {
 		<p><?php echo igea_dc( 'Nessuna voce ancora: compaiono dopo il primo aggiornamento del cron (mu-plugin igea-fonti.php)' ); // phpcs:ignore ?></p>
 	<?php endif; ?>
 	<p class="nota-fonti">Mostriamo solo titolo, data e link: la notizia si legge sul sito della fonte.</p>
-</aside>
+</section>

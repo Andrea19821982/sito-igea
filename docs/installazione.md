@@ -70,6 +70,8 @@ Consigliato un cron reale da Plesk ogni 15 minuti al posto di quello di WordPres
 
 Le pagine servizio attuali sono costruite con WPBakery. Finché il plugin resta attivo, il loro contenuto si vede dentro il nuovo tema; la conversione in blocchi è un passo separato, da fare pagina per pagina e confrontando i testi prima e dopo.
 
+Se il plugin viene disattivato, il tema mostra comunque titoli, testi, immagini e pulsanti di quelle pagine in forma semplice, senza i codici `[vc_row]` a vista (`tema/igea/inc/wpbakery.php`). È una rete di sicurezza, non un'impaginazione: colonne, schede e fisarmoniche diventano testo uno sotto l'altro, e il JavaScript inserito con WPBakery non viene mai eseguito. Prima di disattivare il plugin in produzione, controllare ogni pagina servizio in staging.
+
 ## 7. Controlli in staging
 
 - Ogni pagina servizio, Contatti, Formazione, News, un articolo, la ricerca e un indirizzo inesistente (404).
@@ -77,6 +79,7 @@ Le pagine servizio attuali sono costruite con WPBakery. Finché il plugin resta 
 - Su un telefono vero: menu, test in quattro domande, modulo.
 - Console del browser (F12) su tutte le pagine senza essere collegati: nessun messaggio "Content Security Policy". Se non ce ne sono, si può definire `IGEA_CSP_ATTIVA`.
 - I segnaposto gialli rimasti sono l'elenco di ciò che manca: vedi `docs/da-confermare.md`.
+- Prova automatica nel browser, da un computer con Node.js: `node strumenti/prova-sito.js https://indirizzo-dello-staging/`. Aggiungendo `--invia` spedisce anche una richiesta vera dal modulo (arriva a `IGEA_MAIL_STAGING`).
 
 ## 8. Andata in produzione
 

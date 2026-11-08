@@ -27,6 +27,7 @@ define( 'DISALLOW_FILE_EDIT', true );       // niente modifica dei file da wp-ad
 | `mu-plugins/igea-contatti.php` | `wp-content/mu-plugins/igea-contatti.php` |
 | `mu-plugins/igea-fonti.php` | `wp-content/mu-plugins/igea-fonti.php` |
 | `mu-plugins/igea-sicurezza.php` | `wp-content/mu-plugins/igea-sicurezza.php` |
+| `mu-plugins/igea-controlli.php` | `wp-content/mu-plugins/igea-controlli.php` |
 
 La cartella `mu-plugins` va creata se non c'è. I file lì dentro sono sempre attivi e non compaiono fra i plugin da attivare.
 
@@ -77,6 +78,8 @@ Le pagine servizio attuali sono costruite con WPBakery. Finché il plugin resta 
 Se il plugin viene disattivato, il tema mostra comunque titoli, testi, immagini e pulsanti di quelle pagine in forma semplice, senza i codici `[vc_row]` a vista (`tema/igea/inc/wpbakery.php`). È una rete di sicurezza, non un'impaginazione: colonne, schede e fisarmoniche diventano testo uno sotto l'altro, e il JavaScript inserito con WPBakery non viene mai eseguito. Prima di disattivare il plugin in produzione, controllare ogni pagina servizio in staging.
 
 ## 7. Controlli in staging
+
+- **Strumenti > Salute del sito**: le voci con l'etichetta IGEA dicono cosa manca, in ordine di importanza (email del modulo, pagine collegate, dati aziendali, lingua, icona, fonti ufficiali, protezioni, pagine WPBakery). In rosso c'è ciò che blocca il modulo; in arancione il resto. Non mostrano mai password o valori delle costanti.
 
 - Ogni pagina servizio, Contatti, Formazione, News, un articolo, la ricerca e un indirizzo inesistente (404).
 - Il modulo: un invio corretto, uno con l'email sbagliata, uno senza la casella privacy. L'email arriva a `IGEA_MAIL_STAGING`.

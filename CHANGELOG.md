@@ -1,5 +1,19 @@
 # Novità del tema IGEA
 
+## 0.4.3, 8 novembre 2026
+
+- **Controlli della configurazione** in Strumenti > Salute del sito (nuovo mu-plugin `igea-controlli.php`). Dicono in italiano cosa manca e dove sistemarlo:
+  - parti del sito: tema e mu-plugin;
+  - email del modulo: destinatario, casella di prova in staging, SMTP e mittente;
+  - pagine collegate e dati aziendali vuoti;
+  - lingua, icona del sito, pagina privacy, permalink, home e news;
+  - aggiornamento delle fonti ufficiali, con l'ultimo errore;
+  - protezioni da completare: CSP, HSTS, modifica dei file, errori visibili;
+  - pagine che dipendono da WPBakery.
+  Solo lettura e solo per gli amministratori; delle costanti dice se ci sono, mai il valore.
+- **Fonti ufficiali:** `igea-fonti.php` registra l'ultimo aggiornamento riuscito e l'ultimo errore di ogni fonte.
+- Guida di installazione aggiornata: un file in più da caricare e il controllo in Salute del sito.
+
 ## 0.4.2, 5 novembre 2026
 
 - **Anteprima dei link condivisi.** Su LinkedIn, WhatsApp e nelle email un link del sito mostra titolo, riassunto e immagine: l'immagine in evidenza, la foto del servizio o il logo su fondo bianco (`assets/img/condivisione.jpg`, 1200×630). Se è attivo un plugin SEO, il tema non aggiunge nulla.

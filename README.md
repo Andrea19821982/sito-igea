@@ -6,7 +6,8 @@ Nuovo tema WordPress di [igeagroup.it](https://www.igeagroup.it), costruito dal 
 - **mu-plugin** `mu-plugins/`:
   - `igea-contatti.php`: modulo contatti con antispam senza CAPTCHA, SMTP autenticato e registro della presa visione dell'informativa;
   - `igea-fonti.php`: riquadro "Dalle fonti ufficiali" con i feed di INAIL e Ministero del Lavoro;
-  - `igea-sicurezza.php`: intestazioni HTTP, Content Security Policy, XML-RPC spento, nomi utente non esposti.
+  - `igea-sicurezza.php`: intestazioni HTTP, Content Security Policy, XML-RPC spento, nomi utente non esposti;
+  - `igea-controlli.php`: in Strumenti > Salute del sito dice cosa manca alla configurazione.
 - **Documenti** `docs/`: [installazione in staging](docs/installazione.md), [note sul back-end](docs/backend.md), [cose da confermare](docs/da-confermare.md).
 
 ## Requisiti

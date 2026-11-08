@@ -13,6 +13,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+const IGEA_SICUREZZA_CARICATO = true; // lo legge il controllo in Strumenti > Salute del sito.
+
 /** Intestazioni sulle pagine del sito (non su wp-admin). */
 add_action( 'send_headers', static function (): void {
 	header( 'X-Content-Type-Options: nosniff' );

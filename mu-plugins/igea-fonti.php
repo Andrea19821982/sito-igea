@@ -30,10 +30,14 @@ function igea_aggiorna_fonti(): void {
 	include_once ABSPATH . WPINC . '/feed.php';
 	$salvate = get_option( 'igea_fonti', [] );
 	$salvate = is_array( $salvate ) ? $salvate : [];
+	$stato   = get_option( 'igea_fonti_stato', [] );
+	$stato   = is_array( $stato ) ? $stato : [];
 	foreach ( IGEA_FONTI as $id => $f ) {
 		$feed = fetch_feed( $f['url'] );
 		if ( is_wp_error( $feed ) ) {
-			continue; // fonte giù: restano le voci dell'ultimo aggiornamento riuscito.
+			// Fonte giù: restano le voci dell'ultimo aggiornamento riuscito. L'errore si vede in Strumenti > Salute del sito.
+			$stato[ $id ] = [ 'ok' => (int) ( $stato[ $id ]['ok'] ?? 0 ), 'errore' => mb_substr( $feed->get_error_message(), 0, 200 ), 'quando' => time() ];
+			continue;
 		}
 		$host = wp_parse_url( $f['url'], PHP_URL_HOST );
 		$voci = [];
@@ -49,8 +53,10 @@ function igea_aggiorna_fonti(): void {
 			$voci[] = [ 'fonte' => $f['nome'], 'titolo' => mb_substr( $titolo, 0, 200 ), 'link' => $link, 'data' => (int) $item->get_date( 'U' ) ];
 		}
 		$salvate[ $id ] = array_slice( $voci, 0, 5 );
+		$stato[ $id ]   = [ 'ok' => time(), 'errore' => '', 'quando' => time() ];
 	}
 	update_option( 'igea_fonti', $salvate, false );
+	update_option( 'igea_fonti_stato', $stato, false );
 }
 
 /**

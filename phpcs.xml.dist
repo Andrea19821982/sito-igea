@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- Controlli di sicurezza di WordPress (WPCS) sul tema e sui mu-plugin. Li lancia strumenti/verifica.sh. -->
+<ruleset name="IGEA sicurezza">
+	<file>tema</file>
+	<file>mu-plugins</file>
+	<arg name="extensions" value="php"/>
+	<arg value="s"/>
+	<rule ref="WordPress.Security"/>
+	<rule ref="WordPress.DB.PreparedSQL"/>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders"/>
+	<rule ref="WordPress.WP.AlternativeFunctions"/>
+	<rule ref="WordPress.PHP.DontExtract"/>
+	<rule ref="WordPress.PHP.RestrictedPHPFunctions"/>
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions"/>
+	<rule ref="WordPress.PHP.StrictInArray"/>
+	<rule ref="WordPress.WP.GlobalVariablesOverride"/>
+	<rule ref="WordPress.Security.EscapeOutput">
+		<properties>
+			<property name="customEscapingFunctions" type="array">
+				<element value="igea_dc"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

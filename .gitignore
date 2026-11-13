@@ -34,3 +34,6 @@ debug.log
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Strumenti di sviluppo installati in locale
+strumenti/vendor/

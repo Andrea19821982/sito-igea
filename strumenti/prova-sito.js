@@ -82,6 +82,10 @@ async function provaPagina(ctx, voce, schermo) {
 		h1: document.querySelectorAll('h1').length,
 		senzaAlt: [...document.images].filter(i => !i.hasAttribute('alt')).map(i => i.currentSrc || i.src).slice(0, 3),
 		lingua: document.documentElement.lang,
+		// Elementi che escono dal bordo destro: tabelle, schede, percorso e pulsanti del menu.
+		fuori: [...document.querySelectorAll('.tabella, .schede, .percorso, .altre-news, #menu .solo-telefono')]
+			.filter(e => e.getClientRects().length && e.getBoundingClientRect().right > window.innerWidth + 1).map(e => e.className).slice(0, 3),
+		descrizione: (document.querySelector('meta[name="description"]') || {}).content,
 	}));
 	if (schermo === 'desktop' && voce.stato === 200) {
 		// Dati strutturati leggibili e immagine dell'anteprima social raggiungibile.
@@ -96,6 +100,8 @@ async function provaPagina(ctx, voce, schermo) {
 		}
 	}
 	if (dati.largo > 1) problemi.push(`scorrimento orizzontale di ${dati.largo} px`);
+	if (dati.fuori.length) problemi.push('elementi più larghi dello schermo: ' + dati.fuori.join(', '));
+	if (dati.descrizione !== undefined && (dati.descrizione.trim() === '' || dati.descrizione.length > 160)) problemi.push(`descrizione per i motori di ricerca vuota o troppo lunga (${dati.descrizione.length} caratteri)`);
 	if (dati.h1 !== 1) problemi.push(`titoli h1: ${dati.h1} (deve essercene uno)`);
 	if (dati.senzaAlt.length) problemi.push('immagini senza alt: ' + dati.senzaAlt.join(', '));
 	if (schermo === 'desktop' && !/^it\b/i.test(dati.lingua)) avviso(`${voce.p}: lingua della pagina "${dati.lingua}" (in produzione deve essere italiano)`);
@@ -125,6 +131,8 @@ async function provaHome(browser) {
 	if (await btn.isVisible()) {
 		await btn.click();
 		const aperto = await page.evaluate(() => document.getElementById('menu-btn').getAttribute('aria-expanded') === 'true' && document.getElementById('menu').contains(document.activeElement));
+		const invito = page.locator('#menu .solo-telefono');
+		if (await invito.count()) (await invito.isVisible()) ? ok('menu del telefono: pulsante del preventivo visibile') : ko('menu del telefono: pulsante del preventivo nascosto');
 		await page.keyboard.press('Escape');
 		const chiuso = await page.evaluate(() => document.getElementById('menu-btn').getAttribute('aria-expanded') === 'false' && document.activeElement.id === 'menu-btn');
 		aperto && chiuso ? ok('menu del telefono: apertura, fuoco ed Esc') : ko('menu del telefono: apertura o chiusura non corrette');

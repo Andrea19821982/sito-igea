@@ -260,7 +260,7 @@ section.blocco{padding-block:clamp(72px,10vw,128px)}
 .news-lista li{border-bottom:1px solid var(--linea)}
 .news-lista a{display:grid;grid-template-columns:160px minmax(0,1fr) 48px;gap:28px;align-items:center;padding-block:28px;text-decoration:none;transition:padding .35s cubic-bezier(.2,.8,.2,1)}
 .news-lista a:hover{padding-left:12px}
-.news-lista time{color:var(--grigio);font-size:.9rem;font-variant-numeric:tabular-nums}
+.news-lista time,.news-lista .tipo{color:var(--grigio);font-size:.9rem;font-variant-numeric:tabular-nums}
 .news-lista h3{font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700;letter-spacing:-.02em;margin-top:6px}
 .news-lista .cat{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blu)}
 .news-lista .tondo{width:48px;height:48px;border-radius:50%;border:1px solid var(--linea);display:grid;place-items:center;transition:background .3s,transform .3s,border-color .3s}
@@ -344,20 +344,24 @@ textarea{min-height:130px;resize:vertical}
   .contatti .wrap{grid-template-columns:1fr}
   .piede .griglia{grid-template-columns:1fr 1fr}
 }
+/* Il pulsante del preventivo dentro il menu si vede solo sul telefono. */
+#menu .solo-telefono{display:none}
 @media (max-width:900px){
   #menu{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(14px);padding:12px 16px 24px;box-shadow:0 12px 24px -12px rgba(15,27,45,.25)}
   #menu.aperto{display:block}
   #menu ul{flex-direction:column}
   #menu a{padding:14px 12px;font-size:1.1rem}
   .menu-btn{display:inline-block}
-  #testata .btn{display:none}
+  #testata .solo-desktop{display:none}
+  #menu .solo-telefono{display:inline-flex;margin:14px 12px 0;padding:14px 24px;font-size:1rem;font-weight:600;color:#fff;background:var(--blu)}
+  #menu .solo-telefono:hover{background:var(--blu-profondo)}
   #testata{background:rgba(255,255,255,.88);backdrop-filter:blur(14px)}
 }
 @media (max-width:760px){
   .hero{padding-block:110px 110px}
   .cifre{grid-template-columns:1fr}
   .news-lista a{grid-template-columns:minmax(0,1fr) 48px;gap:16px}
-  .news-lista time{grid-column:1/-1}
+  .news-lista time,.news-lista .tipo{grid-column:1/-1}
   .fonti-lista{grid-template-columns:1fr}
   .manifesto .sotto{grid-template-columns:1fr}
   .manifesto-griglia{grid-template-columns:1fr}
@@ -397,8 +401,8 @@ textarea{min-height:130px;resize:vertical}
 @media (max-width:782px){.admin-bar #testata{top:46px}}
 @media (max-width:600px){.admin-bar #testata{position:absolute}}
 
-/* Voce di menu della pagina corrente */
-#menu .current-menu-item>a,#menu .current_page_item>a,#menu a[aria-current="page"]{background:var(--blu-tenue);color:var(--blu)}
+/* Voce di menu della pagina corrente e della sezione che la contiene (Servizi dentro un servizio, News dentro un articolo) */
+#menu .current-menu-item>a,#menu .current_page_item>a,#menu a[aria-current="page"],#menu .antenato>a,#menu .current-menu-ancestor>a,#menu .current-menu-parent>a,#menu .current_page_ancestor>a,#menu .current_page_parent>a{background:var(--blu-tenue);color:var(--blu)}
 
 /* Apertura delle pagine interne */
 .testata-pagina{position:relative;isolation:isolate;overflow:hidden;padding-block:calc(76px + clamp(48px,8vw,104px)) clamp(40px,6vw,72px);background:var(--carta);border-bottom:1px solid var(--linea)}
@@ -493,12 +497,72 @@ a.page-numbers:hover{border-color:var(--blu)}
 .prosa .vc-galleria{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:1.2em 0}
 .prosa .vc-galleria img,.prosa figure img{width:100%;height:auto;border-radius:8px}
 .prosa figure{margin:1.2em 0}
+/* ===================== Revisione 0.5.0 ===================== */
+
+/* Percorso in cima alle pagine interne: Home / Servizi */
+.percorso ol{display:flex;flex-wrap:wrap;gap:0 8px;list-style:none;margin:0;padding:0;font-size:.88rem;color:var(--grigio)}
+.percorso li{display:flex;align-items:center;gap:8px}
+.percorso li+li::before{content:"/";color:var(--grigio-chiaro)}
+.percorso a{display:inline-block;padding-block:4px;color:var(--grigio);text-decoration:none}
+.percorso a:hover{color:var(--blu);text-decoration:underline}
+
+/* Riquadro laterale: elenco dei servizi, con quello aperto evidenziato */
+.lato-servizi{width:100%;display:grid;gap:10px;margin-top:8px;padding-top:18px;border-top:1px solid var(--linea)}
+.lato-servizi h3{font:600 .76rem/1 var(--testo);letter-spacing:.16em;text-transform:uppercase;color:var(--blu)}
+.lato-servizi ul{list-style:none;margin:0 -10px;padding:0;display:grid;gap:2px}
+.lato-servizi a{display:block;padding:8px 10px;border-radius:10px;font-size:.95rem;font-weight:500;color:var(--inchiostro);text-decoration:none}
+.lato-servizi a:hover{background:var(--bianco)}
+.lato-servizi a[aria-current="page"]{background:var(--bianco);color:var(--blu);box-shadow:inset 3px 0 0 var(--verde-medio)}
+
+/* Pagina con tutti i servizi: le quattro aree come schede */
+.schede{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.scheda{display:grid;grid-template-rows:auto 1fr;min-width:0;background:var(--bianco);border:1px solid var(--linea);border-radius:24px;overflow:hidden}
+.scheda-foto{aspect-ratio:16/9;overflow:hidden;background:var(--blu-tenue)}
+.scheda-foto img{width:100%;height:100%;object-fit:cover}
+.scheda-testo{display:grid;gap:12px;align-content:start;justify-items:start;padding:clamp(22px,3vw,32px)}
+.scheda .eyebrow{color:var(--verde)}
+.scheda h2{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--inchiostro)}
+.scheda p{margin:0;color:var(--grigio)}
+
+/* Articolo: news precedente e successiva */
+.altre-news{margin-top:48px;padding-top:28px;border-top:1px solid var(--linea)}
+.altre-news .nav-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.altre-news .nav-next{grid-column:2;text-align:right}
+.prosa .altre-news a{display:grid;gap:6px;height:100%;padding:16px 18px;border:1px solid var(--linea);border-radius:16px;text-decoration:none;transition:border-color .2s}
+.prosa .altre-news a:hover{border-color:var(--blu)}
+.altre-news .verso{font-size:.8rem;font-weight:600;color:var(--grigio)}
+.altre-news .titolo{font-weight:600;color:var(--inchiostro)}
+
+@media (max-width:900px){
+  /* I pannelli dei servizi sono alti quanto il loro contenuto: niente spazio vuoto nel pannello blu */
+  .pannello{min-height:0}
+  .pannello.invito .pannello-testo{padding-block:36px}
+}
+@media (max-width:760px){
+  .schede{grid-template-columns:1fr}
+  .cifre{gap:10px}
+  .cifra{padding:16px 22px;align-items:center}
+  .cifra strong{font-size:2.6rem;min-width:1.3em}
+}
+@media (max-width:600px){
+  .altre-news .nav-links{grid-template-columns:1fr}
+  .altre-news .nav-next{grid-column:auto;text-align:left}
+  /* Tabella delle scadenze: ogni riga diventa un blocco (figura, scadenza, riferimento), senza scorrere di lato.
+     I ruoli ARIA nel markup tengono la tabella leggibile dagli screen reader. */
+  .tabella table,.tabella caption,.tabella tbody,.tabella tr,.tabella tbody th,.tabella tbody td{display:block}
+  .tabella thead{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%)}
+  .tabella caption{padding:18px 18px 12px}
+  .tabella tbody tr{padding:13px 18px;border-top:1px solid var(--linea)}
+  .tabella tbody th,.tabella tbody td{padding:0;border:0}
+  .tabella tbody td{margin-top:2px}
+}
+
 /* Stampa: solo il contenuto, nero su bianco, senza animazioni, decorazioni, menu e moduli */
 @media print{
   @page{margin:16mm 14mm}
   html,body{background:#fff!important;color:#000!important}
   *,*::before,*::after{box-shadow:none!important;text-shadow:none!important;animation:none!important;transition:none!important}
-  #testata nav,#testata .btn,.menu-btn,.salta,.nastri,.onde,#grafo,.scorri,.marchio,.lato,#test,#modulo,.fonti,.test-azioni,.btn{display:none!important}
+  #testata nav,#testata .btn,.menu-btn,.salta,.nastri,.onde,#grafo,.scorri,.marchio,.lato,#test,#modulo,.fonti,.test-azioni,.btn,.percorso,.altre-news{display:none!important}
   #testata{position:static!important;border:0!important;background:none!important}
   .rivela,.armato .rivela{opacity:1!important;transform:none!important}
   a{color:#000!important;text-decoration:underline}

@@ -33,7 +33,15 @@ $igea_cookie  = igea_url_pagina( 'cookie' );
 						$igea_legali[] = 'Capitale sociale ' . igea_dc( 'DA CONFERMARE' );
 					}
 					echo implode( ' · ', $igea_legali ); // phpcs:ignore WordPress.Security.EscapeOutput -- parti già escapate.
+
+					// Recapiti: solo quelli compilati in Personalizza. I segnaposto restano nella sezione Contatti.
+					$igea_tel   = igea_dato( 'telefono' );
+					$igea_email = igea_dato( 'email' );
+					$igea_pec   = igea_dato( 'pec' );
 					?>
+					<?php if ( '' !== $igea_tel ) : ?><br>Tel. <a href="<?php echo esc_url( 'tel:' . preg_replace( '/[^0-9+]/', '', $igea_tel ) ); ?>"><?php echo esc_html( $igea_tel ); ?></a><?php endif; ?>
+					<?php if ( '' !== $igea_email ) : ?><br><a href="<?php echo esc_url( 'mailto:' . antispambot( $igea_email ) ); ?>"><?php echo esc_html( antispambot( $igea_email ) ); ?></a><?php endif; ?>
+					<?php if ( '' !== $igea_pec ) : ?><br>PEC <?php echo esc_html( antispambot( $igea_pec ) ); ?><?php endif; ?>
 				</address>
 			</div>
 			<div>

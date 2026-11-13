@@ -55,11 +55,12 @@ Fuori dalla produzione, se `IGEA_MAIL_STAGING` manca, le email non partono affat
 3. **Aspetto > Personalizza > Pagine collegate**: scegli le pagine **esistenti** per Contatti, servizi, Formazione e Cookie policy. Gli indirizzi non cambiano. Contatti, Formazione e Cookie policy si collegano da soli se hanno lo slug `contatti`, `formazione` e `cookie-policy`.
 4. **Impostazioni > Lettura**: home "Una pagina statica", con una pagina qualsiasi come home e la pagina News come "Pagina articoli". Così l'archivio delle news ha il suo indirizzo.
 5. **Impostazioni > Privacy**: scegli la pagina dell'informativa. Il link compare nel modulo e nel piè di pagina.
+   La pagina collegata come **Servizi** mostra da sola le schede dei quattro servizi, con il link alla pagina di ciascuno. Se nel testo della pagina ci sono già i link ad almeno due pagine dei servizi, il tema non aggiunge le schede.
 6. **Aspetto > Menu**: facoltativo. Senza menu assegnati il tema mostra Servizi, Formazione, Chi siamo, News e Contatti.
 7. **Aspetto > Personalizza > Identità del sito > Icona del sito**: controlla che ci sia l'icona di IGEA. Se manca, la scheda del browser mostra quella di WordPress. Di solito è già impostata dal sito attuale e resta anche cambiando tema.
 8. **Impostazioni > Lingua del sito**: Italiano. Serve alla lettura vocale delle pagine e all'anteprima dei link condivisi.
 
-Anteprima dei link condivisi (LinkedIn, WhatsApp, email): il tema la prepara da solo con titolo, riassunto della pagina e immagine. Usa l'immagine in evidenza, la foto del servizio o il logo. Se è attivo un plugin SEO come Yoast, se ne occupa il plugin e il tema non aggiunge nulla. Il riassunto si scrive nel campo "Riassunto" della pagina; senza riassunto, la pagina non ha descrizione.
+Anteprima dei link condivisi (LinkedIn, WhatsApp, email): il tema la prepara da solo con titolo, riassunto della pagina e immagine. Usa l'immagine in evidenza, la foto del servizio o il logo. Se è attivo un plugin SEO come Yoast, se ne occupa il plugin e il tema non aggiunge nulla. Il riassunto si scrive nel campo "Riassunto" della pagina; senza riassunto il tema usa un testo già presente sul sito: la frase di apertura in home, il testo del servizio nelle pagine dei servizi, l'inizio del testo nelle altre pagine e nelle news.
 
 ## 5. Notizie dalle fonti ufficiali
 

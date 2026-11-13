@@ -6,7 +6,7 @@
 		<div class="hero-testo">
 			<span class="pillola eyebrow"><i aria-hidden="true"></i>Consulenza per aziende ed enti · Roma</span>
 			<h1 id="titolo"><span class="riga"><span>Sicurezza.</span></span><span class="riga"><span>Ambiente.</span></span><span class="riga"><span class="accento">Un solo referente.</span></span></h1>
-			<p class="lead">Salute e sicurezza sul lavoro, igiene ambientale e industriale, igiene degli alimenti e medicina del lavoro. Ti affianchiamo in ogni adempimento, così puoi pensare alla tua azienda.</p>
+			<p class="lead"><?php echo esc_html( igea_testo_apertura() ); ?></p>
 			<div class="azioni">
 				<a class="btn btn-pieno" href="#contatti">Richiedi un preventivo <span class="fr" aria-hidden="true">→</span></a>
 				<a class="btn btn-bordo" href="#adempimenti">Cosa ti serve? 4 domande</a>

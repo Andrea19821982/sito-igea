@@ -32,7 +32,8 @@ Titolo, data e link dai feed RSS di INAIL e del Ministero del Lavoro, aggiornati
 
 - Caratteri Inter e Inter Tight **in locale** (licenza SIL OFL, in `assets/fonts/`): nessuna richiesta a Google, nessun banner cookie necessario per i font.
 - Staging e copie locali con `noindex` automatico.
-- Descrizione per i motori di ricerca dal riassunto della pagina, solo se non c'è un plugin SEO attivo.
+- Descrizione per i motori di ricerca dal riassunto della pagina, solo se non c'è un plugin SEO attivo. Senza riassunto usa un testo già sul sito (apertura della home, testo del servizio, inizio della pagina), mai un testo inventato.
+- Dati strutturati `BreadcrumbList` sulle pagine interne e `Article` sulle news, solo se non c'è un plugin SEO attivo.
 - Dati strutturati `ProfessionalService` in home, solo con i dati compilati in Personalizza.
 
 ## Da fare sul server (li esegue Andrea)

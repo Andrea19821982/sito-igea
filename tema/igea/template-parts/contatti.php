@@ -113,7 +113,7 @@ $igea_privacy = get_privacy_policy_url();
 						<?php endforeach; ?>
 					</select>
 				</div>
-				<div class="campo"><label for="persone">Quante persone lavorano in azienda <span class="facolt">(facoltativo)</span></label>
+				<div class="campo"><label for="persone">Persone in azienda <span class="facolt">(facoltativo)</span></label>
 					<select id="persone" name="persone">
 						<option value="">Scegli</option>
 						<?php foreach ( $igea_persone as $igea_chiave => $igea_nome ) : ?>

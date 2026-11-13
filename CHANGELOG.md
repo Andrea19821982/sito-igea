@@ -1,5 +1,35 @@
 # Novità del tema IGEA
 
+## 0.5.0, 13 novembre 2026
+
+Revisione completa del sito: pagine, codice, accessibilità, prestazioni e SEO.
+
+- **Telefono**
+  - Il pulsante "Richiedi un preventivo" è dentro il menu: prima sul telefono non c'era.
+  - La tabella della formazione si legge senza scorrere di lato: ogni corso diventa un blocco.
+  - Numeri della home più compatti e niente spazio vuoto nel riquadro blu del test.
+  - Il globo animato usa meno punti e 30 fotogrammi al secondo: meno batteria.
+- **Navigazione**
+  - Percorso in cima alle pagine interne (Home / Servizi) e alle news (Home / News).
+  - Il menu evidenzia la sezione anche nelle pagine figlie e negli articoli.
+  - Nelle pagine dei servizi, elenco "Tutti i servizi" a lato, con quello aperto in evidenza.
+  - La pagina Servizi mostra le schede dei quattro servizi (vedi la guida di installazione).
+  - In fondo agli articoli: news precedente e successiva.
+- **News e ricerca**
+  - Elenchi con un riassunto preso dal testo, anche per le pagine fatte con WPBakery.
+  - Categoria vera accanto alla data; "Senza categoria" non si mostra più.
+  - Nella ricerca le pagine hanno l'etichetta "Pagina" al posto della data.
+  - Archivi di categoria e argomento con l'intestazione giusta.
+- **Motori di ricerca** (solo senza plugin SEO)
+  - Descrizione anche senza riassunto scritto a mano, da un testo già sul sito, tagliata a fine parola.
+  - Dati strutturati `Article` sulle news; percorso anche per archivi e categorie.
+- **Altro**
+  - Telefono, email e PEC nel piè di pagina, solo se compilati in Personalizza.
+  - Modulo contatti: le due tendine sono allineate.
+  - Logo con priorità di caricamento: è l'elemento più grande in cima sul telefono.
+  - Tabella della formazione con ruoli espliciti per la lettura vocale.
+- **Prove automatiche:** `prova-sito.js` controlla anche gli elementi più larghi dello schermo, la descrizione e il pulsante nel menu del telefono.
+
 ## 0.4.3, 8 novembre 2026
 
 - **Controlli della configurazione** in Strumenti > Salute del sito (nuovo mu-plugin `igea-controlli.php`). Dicono in italiano cosa manca e dove sistemarlo:

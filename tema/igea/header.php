@@ -28,8 +28,9 @@ defined( 'ABSPATH' ) || exit;
 				'fallback_cb'    => 'igea_menu_ripiego',
 			] );
 			?>
+			<a class="btn btn-pieno solo-telefono" href="<?php echo esc_url( igea_url_preventivo() ); ?>">Richiedi un preventivo <span class="fr" aria-hidden="true">→</span></a>
 		</nav>
-		<a class="btn btn-pieno" href="<?php echo esc_url( igea_url_preventivo() ); ?>">Richiedi un preventivo <span class="fr" aria-hidden="true">→</span></a>
+		<a class="btn btn-pieno solo-desktop" href="<?php echo esc_url( igea_url_preventivo() ); ?>">Richiedi un preventivo <span class="fr" aria-hidden="true">→</span></a>
 	</div>
 </header>
 

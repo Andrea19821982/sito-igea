@@ -24,7 +24,7 @@ function igea_logo( string $alt, bool $differita = false ): void {
 		esc_url( get_theme_file_uri( 'assets/img/logo-igea-340.webp' ) ),
 		esc_url( get_theme_file_uri( 'assets/img/logo-igea-340.png' ) ),
 		esc_attr( $alt ),
-		$differita ? ' loading="lazy" decoding="async"' : ''
+		$differita ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'
 	);
 }
 
@@ -98,11 +98,21 @@ function igea_voci_piede(): array {
 function igea_stampa_voci( array $voci ): void {
 	// Solo il percorso, per confronto: non viene mai stampato.
 	$attuale = untrailingslashit( (string) strtok( (string) ( $_SERVER['REQUEST_URI'] ?? '/' ), '?' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- solo confronto.
+	$radice  = untrailingslashit( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ) );
+	$news    = igea_url_news();
 	echo '<ul>';
 	foreach ( $voci as [ $etichetta, $url ] ) {
-		$corrente = ! str_contains( $url, '#' ) && untrailingslashit( (string) wp_parse_url( $url, PHP_URL_PATH ) ) === $attuale;
+		$percorso = untrailingslashit( (string) wp_parse_url( $url, PHP_URL_PATH ) );
+		$pagina   = ! str_contains( $url, '#' );
+		$corrente = $pagina && $percorso === $attuale;
+		// La sezione che contiene la pagina: Servizi dentro un servizio, News dentro un articolo o una categoria.
+		$antenato = $pagina && ! $corrente && $percorso !== $radice && (
+			str_starts_with( $attuale . '/', $percorso . '/' )
+			|| ( '' !== $news && $url === $news && ( is_singular( 'post' ) || is_category() || is_tag() || is_date() ) )
+		);
 		printf(
-			'<li><a href="%s"%s>%s</a></li>',
+			'<li%s><a href="%s"%s>%s</a></li>',
+			$antenato ? ' class="antenato"' : '',
 			esc_url( $url ),
 			$corrente ? ' aria-current="page"' : '',
 			esc_html( $etichetta )
@@ -126,4 +136,38 @@ function igea_data(): string {
 		esc_attr( get_the_date( 'Y-m-d' ) ),
 		esc_html( get_the_date( 'j F Y' ) )
 	);
+}
+
+/** Categoria da mostrare: la prima che non sia quella predefinita di WordPress ("Senza categoria"). */
+function igea_categoria(): ?WP_Term {
+	$predefinita = (int) get_option( 'default_category' );
+	foreach ( (array) get_the_category() as $categoria ) {
+		if ( $categoria instanceof WP_Term && (int) $categoria->term_id !== $predefinita ) {
+			return $categoria;
+		}
+	}
+	return null;
+}
+
+/**
+ * Riassunto per elenchi, ricerca e descrizioni: quello scritto a mano, altrimenti l'inizio del testo della pagina.
+ * Mai inventato: se il testo non c'è, resta vuoto. Sempre testo semplice, da escapare all'uscita.
+ */
+function igea_estratto( int $id = 0, int $parole = 28 ): string {
+	$post = get_post( $id ?: null );
+	if ( ! $post instanceof WP_Post || post_password_required( $post ) ) {
+		return '';
+	}
+	if ( has_excerpt( $post ) ) {
+		return trim( wp_strip_all_tags( (string) $post->post_excerpt, true ) );
+	}
+	$testo = (string) $post->post_content;
+	// WPBakery: HTML grezzo e JavaScript sono codificati, non sono testo; degli altri codici resta il contenuto.
+	$testo = (string) preg_replace( '/\[(vc_raw_html|vc_raw_js)\b[^\]]*\].*?\[\/\1\]/s', ' ', $testo );
+	$testo = (string) preg_replace( '/\[\/?[a-zA-Z][\w-]*(?:\s[^\]]*)?\]/', ' ', $testo );
+	// Uno spazio dove finisce un blocco: senza, le voci di un elenco si attaccano ("DVRRSPP").
+	$testo = (string) preg_replace( '#</(?:p|li|h[1-6]|div|td|th|tr|dt|dd|blockquote|figcaption)>|<br\s*/?>#i', ' $0', $testo );
+	$testo = wp_strip_all_tags( $testo, true );
+	$testo = trim( (string) preg_replace( '/(?:\s|&nbsp;)+/u', ' ', $testo ) );
+	return '' === $testo ? '' : wp_trim_words( $testo, $parole, '…' );
 }

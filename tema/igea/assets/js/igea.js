@@ -16,9 +16,11 @@
     var rotY=0.6,rotX=-0.28,vel=0.0018,trascina=null,mouse={x:-9999,y:-9999,attivo:false};
     /* hov: quanto il cursore è sulla sfera (0-1, smorzato); mx,my: cursore smorzato; incX,incY: inclinazione verso il cursore */
     var hov=0,mx=-9999,my=-9999,incX=0,incY=0,increspa=[],vic=[],ultimoP=null,heroBox=cv.parentNode;
+    /* Sui telefoni la sfera è uno sfondo attenuato: meno nodi e 30 fotogrammi al secondo, per non scaldare il telefono */
+    var piccolo=window.matchMedia('(max-width: 760px)').matches;
     var ETICHETTE=['Sicurezza sul lavoro','Ambiente','Igiene degli alimenti','Medicina del lavoro','DVR','Formazione','D.Lgs. 81/08','HACCP','ATEX','ISO 9001','D.Lgs. 152/06','ISO 22000'];
     (function crea(){
-      var N=150,oro=Math.PI*(3-Math.sqrt(5)),passoHub=Math.floor(N/ETICHETTE.length);
+      var N=piccolo?108:150,oro=Math.PI*(3-Math.sqrt(5)),passoHub=Math.floor(N/ETICHETTE.length);
       for(var i=0;i<N;i++){var y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=oro*i,j=0.06;
         var x=Math.cos(t)*r+(Math.random()-.5)*j,z=Math.sin(t)*r+(Math.random()-.5)*j,yy=y+(Math.random()-.5)*j,l=Math.hypot(x,yy,z);
         var h=(i%passoHub===Math.floor(passoHub/2))&&Math.floor(i/passoHub)<ETICHETTE.length?Math.floor(i/passoHub):-1;
@@ -77,7 +79,8 @@
     var raf=null;
     /* Velocità legata al tempo, non alla frequenza dello schermo (60 o 120 Hz) */
     var tPrec=0;
-    function ciclo(tt){var dt=tPrec?Math.min(3,(tt-tPrec)/16.667):1,ease=function(k){return 1-Math.pow(1-k,dt)};tPrec=tt;
+    function ciclo(tt){if(piccolo&&tPrec&&tt-tPrec<30){raf=requestAnimationFrame(ciclo);return}
+      var dt=tPrec?Math.min(3,(tt-tPrec)/16.667):1,ease=function(k){return 1-Math.pow(1-k,dt)};tPrec=tt;
       if(intro<1)intro=Math.min(1,intro+0.0105*dt);
       var cx=W/2,cy=H/2,R=Math.min(W,H)*0.37,dentro=mouse.attivo&&Math.hypot(mouse.x-cx,mouse.y-cy)<R*1.45;
       hov+=((dentro?1:0)-hov)*ease(0.08);

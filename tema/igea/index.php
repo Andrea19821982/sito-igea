@@ -18,8 +18,13 @@ if ( is_home() ) {
 
 get_template_part( 'template-parts/testata-pagina', null, [
 	'titolo'      => $igea_titolo,
-	'eyebrow'     => is_home() ? 'News' : 'Archivio',
-	'eyebrow_url' => is_home() ? '' : igea_url_news(),
+	'eyebrow'     => match ( true ) {
+		is_home()     => '',
+		is_category() => 'Categoria',
+		is_tag()      => 'Argomento',
+		default       => 'Archivio',
+	},
+	'eyebrow_url' => is_home() || is_category() || is_tag() ? '' : igea_url_news(),
 	'lead'        => trim( $igea_lead ),
 ] );
 ?>

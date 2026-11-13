@@ -10,13 +10,44 @@ function igea_plugin_seo_attivo(): bool {
 	return defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'AIOSEO_VERSION' ) || defined( 'SEOPRESS_VERSION' ) || defined( 'THE_SEO_FRAMEWORK_VERSION' );
 }
 
-/** Descrizione della pagina: riassunto scritto a mano, descrizione del sito o della categoria. Mai inventata. */
+/**
+ * Accorcia un testo alla lunghezza data senza spezzare l'ultima parola.
+ */
+function igea_taglia( string $testo, int $massimo ): string {
+	if ( mb_strlen( $testo ) <= $massimo ) {
+		return $testo;
+	}
+	$taglio = mb_substr( $testo, 0, $massimo - 1 );
+	$spazio = mb_strrpos( $taglio, ' ' );
+	if ( false !== $spazio && $spazio > $massimo / 2 ) {
+		$taglio = mb_substr( $taglio, 0, $spazio );
+	}
+	return rtrim( $taglio, ' ,;:.-' ) . '…';
+}
+
+/**
+ * Descrizione della pagina, mai inventata: il riassunto scritto a mano, altrimenti un testo già presente sul sito
+ * (frase di apertura della home, testo del servizio, inizio della pagina, descrizione della categoria).
+ */
 function igea_descrizione(): string {
 	$descrizione = '';
 	if ( is_front_page() ) {
 		$descrizione = get_bloginfo( 'description' );
-	} elseif ( is_singular() && has_excerpt() ) {
-		$descrizione = get_the_excerpt();
+		if ( '' === trim( (string) $descrizione ) ) {
+			$descrizione = igea_testo_apertura();
+		}
+	} elseif ( is_singular() ) {
+		$servizio = igea_servizio_pagina();
+		if ( has_excerpt() || ! $servizio ) {
+			$descrizione = igea_estratto( (int) get_queried_object_id(), 30 );
+		} else {
+			$descrizione = $servizio['testo'];
+		}
+	} elseif ( is_home() ) {
+		$news = (int) get_option( 'page_for_posts' );
+		if ( $news && has_excerpt( $news ) ) {
+			$descrizione = get_the_excerpt( $news );
+		}
 	} elseif ( is_category() || is_tag() ) {
 		$descrizione = term_description();
 	}
@@ -34,7 +65,7 @@ add_action( 'wp_head', static function (): void {
 	}
 	$descrizione = igea_descrizione();
 	if ( '' !== $descrizione ) {
-		printf( '<meta name="description" content="%s">' . "\n", esc_attr( mb_substr( $descrizione, 0, 160 ) ) );
+		printf( '<meta name="description" content="%s">' . "\n", esc_attr( igea_taglia( $descrizione, 160 ) ) );
 	}
 }, 1 );
 
@@ -48,9 +79,6 @@ add_action( 'wp_head', static function (): void {
 	}
 	$servizio    = igea_servizio_pagina();
 	$descrizione = igea_descrizione();
-	if ( '' === $descrizione && $servizio ) {
-		$descrizione = $servizio['testo'];
-	}
 	$tag = [
 		'og:locale'    => get_locale(),
 		'og:site_name' => get_bloginfo( 'name' ),
@@ -63,7 +91,7 @@ add_action( 'wp_head', static function (): void {
 		} ),
 	];
 	if ( '' !== $descrizione ) {
-		$tag['og:description'] = mb_substr( $descrizione, 0, 200 );
+		$tag['og:description'] = igea_taglia( $descrizione, 200 );
 	}
 	if ( is_front_page() ) {
 		$tag['og:url'] = home_url( '/' );
@@ -100,36 +128,84 @@ add_action( 'wp_head', static function (): void {
 	echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
 }, 2 );
 
-/** Percorso della pagina (Home > Servizi > Pagina) per i risultati di Google. Solo dati strutturati, nessun cambio grafico. */
-add_action( 'wp_head', static function (): void {
-	if ( igea_plugin_seo_attivo() || is_front_page() || is_404() || is_search() ) {
-		return;
+/**
+ * Percorso della pagina, da Home alla pagina corrente: [[nome, indirizzo], …]. Vuoto dove non serve
+ * (home, ricerca, 404). Lo usano i dati strutturati qui sotto e la riga in cima alle pagine interne.
+ */
+function igea_percorso(): array {
+	if ( is_front_page() || is_404() || is_search() ) {
+		return [];
 	}
 	$voci = [ [ 'Home', home_url( '/' ) ] ];
+	$news = igea_url_news();
 	if ( is_page() ) {
 		foreach ( array_reverse( get_post_ancestors( (int) get_queried_object_id() ) ) as $antenato ) {
 			if ( 'publish' === get_post_status( $antenato ) ) {
 				$voci[] = [ get_the_title( $antenato ), (string) get_permalink( $antenato ) ];
 			}
 		}
-		$voci[] = [ get_the_title(), (string) get_permalink() ];
+		$voci[] = [ get_the_title( (int) get_queried_object_id() ), (string) get_permalink( (int) get_queried_object_id() ) ];
 	} elseif ( is_singular( 'post' ) || is_category() || is_tag() ) {
-		$news = (int) get_option( 'page_for_posts' );
-		if ( '' !== igea_url_news() ) {
-			$voci[] = [ get_the_title( $news ), igea_url_news() ];
+		if ( '' !== $news ) {
+			$voci[] = [ get_the_title( (int) get_option( 'page_for_posts' ) ), $news ];
 		}
-		$voci[] = is_singular() ? [ get_the_title(), (string) get_permalink() ] : [ single_term_title( '', false ), (string) get_term_link( get_queried_object() ) ];
-	} elseif ( is_home() && '' !== igea_url_news() ) {
-		$voci[] = [ get_the_title( (int) get_option( 'page_for_posts' ) ), igea_url_news() ];
+		if ( is_singular() ) {
+			$voci[] = [ get_the_title( (int) get_queried_object_id() ), (string) get_permalink( (int) get_queried_object_id() ) ];
+		} else {
+			$link   = get_term_link( get_queried_object() );
+			$voci[] = [ single_term_title( '', false ), is_wp_error( $link ) ? '' : (string) $link ];
+		}
+	} elseif ( is_home() && '' !== $news ) {
+		$voci[] = [ get_the_title( (int) get_option( 'page_for_posts' ) ), $news ];
 	} else {
+		return [];
+	}
+	return array_map( static fn( array $v ): array => [ wp_strip_all_tags( (string) $v[0] ), (string) $v[1] ], $voci );
+}
+
+/** Opzioni di json_encode per i dati strutturati: nessun "</script>" può chiudere il blocco in anticipo. */
+const IGEA_JSON = JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
+/** Percorso (Home > Servizi > Pagina) per i risultati di Google. */
+add_action( 'wp_head', static function (): void {
+	$voci = igea_plugin_seo_attivo() ? [] : igea_percorso();
+	if ( count( $voci ) < 2 ) {
 		return;
 	}
 	$elenco = [];
 	foreach ( $voci as $i => [ $nome, $url ] ) {
-		$elenco[] = [ '@type' => 'ListItem', 'position' => $i + 1, 'name' => wp_strip_all_tags( (string) $nome ), 'item' => $url ];
+		$elenco[] = array_filter( [ '@type' => 'ListItem', 'position' => $i + 1, 'name' => $nome, 'item' => $url ] );
 	}
 	$dati = [ '@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $elenco ];
-	echo '<script type="application/ld+json">' . wp_json_encode( $dati, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "</script>\n";
+	echo '<script type="application/ld+json">' . wp_json_encode( $dati, IGEA_JSON ) . "</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput -- JSON con JSON_HEX_TAG.
+} );
+
+/** Articolo delle news per Google: titolo, date ed editore. L'autore è l'azienda, non il nome utente. */
+add_action( 'wp_head', static function (): void {
+	if ( igea_plugin_seo_attivo() || ! is_singular( 'post' ) ) {
+		return;
+	}
+	$id      = (int) get_queried_object_id();
+	$azienda = [ '@type' => 'Organization', 'name' => igea_dato( 'ragione_sociale' ), 'url' => home_url( '/' ) ];
+	$dati    = [
+		'@context'         => 'https://schema.org',
+		'@type'            => 'Article',
+		'headline'         => mb_substr( wp_strip_all_tags( get_the_title( $id ) ), 0, 110 ),
+		'datePublished'    => (string) get_the_date( DATE_W3C, $id ),
+		'dateModified'     => (string) get_the_modified_date( DATE_W3C, $id ),
+		'mainEntityOfPage' => (string) get_permalink( $id ),
+		'author'           => $azienda,
+		'publisher'        => $azienda + [ 'logo' => [ '@type' => 'ImageObject', 'url' => get_theme_file_uri( 'assets/img/logo-igea-340.png' ) ] ],
+	];
+	$immagine = has_post_thumbnail( $id ) ? wp_get_attachment_image_src( (int) get_post_thumbnail_id( $id ), 'large' ) : false;
+	if ( $immagine ) {
+		$dati['image'] = $immagine[0];
+	}
+	$descrizione = igea_descrizione();
+	if ( '' !== $descrizione ) {
+		$dati['description'] = $descrizione;
+	}
+	echo '<script type="application/ld+json">' . wp_json_encode( $dati, IGEA_JSON ) . "</script>\n"; // phpcs:ignore WordPress.Security.EscapeOutput -- JSON con JSON_HEX_TAG.
 } );
 
 /** ProfessionalService solo con i dati compilati in Personalizza: niente di inventato. */

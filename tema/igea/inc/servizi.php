@@ -38,3 +38,25 @@ function igea_servizi(): array {
 		],
 	] );
 }
+
+/** Frase di apertura della home (testo approvato nel prototipo): la usano la hero e la descrizione per i motori di ricerca. */
+function igea_testo_apertura(): string {
+	return 'Salute e sicurezza sul lavoro, igiene ambientale e industriale, igiene degli alimenti e medicina del lavoro. Ti affianchiamo in ogni adempimento, così puoi pensare alla tua azienda.';
+}
+
+/**
+ * Nella pagina "tutti i servizi" le quattro schede compaiono da sole, a meno che il testo della pagina
+ * non porti già ad almeno due pagine servizio (in quel caso l'elenco c'è già e non va ripetuto).
+ */
+function igea_schede_servizi_utili( int $id ): bool {
+	$testo    = (string) get_post_field( 'post_content', $id );
+	$presenti = 0;
+	foreach ( array_keys( igea_servizi() ) as $chiave ) {
+		$pagina = igea_id_pagina( $chiave );
+		$slug   = $pagina ? (string) get_post_field( 'post_name', $pagina ) : '';
+		if ( '' !== $slug && str_contains( $testo, '/' . $slug ) ) {
+			++$presenti;
+		}
+	}
+	return (bool) apply_filters( 'igea_schede_servizi', $presenti < 2, $id );
+}
